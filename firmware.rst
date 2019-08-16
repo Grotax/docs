@@ -161,11 +161,24 @@ Die SSL-Zertifikate müssen wir vom öffentlichen Firmware-Server holen. Dafür 
 
 ::
 
-    touch /root/sync-certs.sh
-    echo -e "#!/bin/bash\n\nrsync -e "ssh -i /root/.ssh/fw-rsync-key" -av fwcerts@firmware.freifunk-suedholstein.de:/home/fwcerts/certs /etc/\nchown -R root:root /etc/certs\nchmod -R 600 /etc/certs\nsystemctl reload nginx.service\nexit" > /root/sync-certs.sh
+    nano /root/sync-certs.sh
+
+Fügen diese Zeilen ein
+
+::
+    #!/bin/bash
+    rsync -e "ssh -i /root/.ssh/fw-rsync-key" -av fwcerts@firmware.freifunk-suedholstein.de:/home/fwcerts/certs /etc/
+    chown -R root:root /etc/certs
+    chmod -R 600 /etc/certs
+    systemctl reload nginx.service
+    exit
+
+Und machen die Datei ausführbar
+
+::
     chmod 700 /root/sync-certs.sh
-    
-Der private-key der unter /root/.ssh/fw-rsync-key liegen soll kann beim NOC erfragt werden.
+
+Der private-key, der unter /root/.ssh/fw-rsync-key liegen soll, kann beim NOC erfragt werden.
 Dieses Script lassen wir nun monatlich ausführen. Dafür fügen wir die folgende Zeile in /etc/crontab an
 
 ::
