@@ -166,6 +166,7 @@ Die SSL-Zertifikate müssen wir vom öffentlichen Firmware-Server holen. Dafür 
 Fügen diese Zeilen ein
 
 ::
+
     #!/bin/bash
     rsync -e "ssh -i /root/.ssh/fw-rsync-key" -av fwcerts@firmware.freifunk-suedholstein.de:/home/fwcerts/certs /etc/
     chown -R root:root /etc/certs
@@ -176,6 +177,7 @@ Fügen diese Zeilen ein
 Und machen die Datei ausführbar
 
 ::
+
     chmod 700 /root/sync-certs.sh
 
 Der private-key, der unter /root/.ssh/fw-rsync-key liegen soll, kann beim NOC erfragt werden.
