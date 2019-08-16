@@ -157,6 +157,23 @@ Für nginx gibt es eine vorbereitete Konfiguration.
 
 .. literalinclude:: configs/nginx-firmware.conf
 
+Die SSL-Zertifikate müssen wir vom öffentlichen Firmware-Server holen. Dafür erstellen wir folgendes Script
+
+::
+
+    touch /root/sync-certs.sh
+    echo -e "#!/bin/bash\n\nrsync -e "ssh -i /root/.ssh/fw-rsync-key" -av fwcerts@firmware.freifunk-suedholstein.de:/home/fwcerts/certs /etc/\nchown -R root:root /etc/certs\nchmod -R 600 /etc/certs\nsystemctl reload nginx.service\nexit" > /root/sync-certs.sh
+    chmod 700 /root/sync-certs.sh
+    
+Der private-key der unter /root/.ssh/fw-rsync-key liegen soll kann beim NOC erfragt werden.
+Dieses Script lassen wir nun monatlich ausführen. Dafür fügen wir die folgende Zeile in /etc/crontab an
+
+::
+
+    @monthly        root    /root/sync-certs.sh > /dev/null 2>&1
+
+
+
 jenkins
 -------
 
